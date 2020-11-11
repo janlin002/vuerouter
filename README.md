@@ -18,7 +18,7 @@ ${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products
 ```
 <p>dev為開發中版本，prod為完成的版本</p><br>
 
-<h2>加入bootstrap</h2>
+<h2>加入Bootstrap</h2>
 
 ```bash
 npm install bootstrap --save
