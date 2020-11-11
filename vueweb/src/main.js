@@ -4,6 +4,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import 'bootstrap';
 import App from './App'
 import router from './router' //自動找到資料夾中的 index.js 檔案
 
