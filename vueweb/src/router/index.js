@@ -1,9 +1,11 @@
+//路由的路徑
 import Vue from 'vue';
 import VueRouter from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld';
 import Login from '@/components/pages/Login'
 import Dashboard from '@/components/Dashboard'
 import Products from '@/components/pages/Products'
+import CustomerOrder from '@/components/pages/CustomerOrder';
 
 Vue.use(VueRouter);
 
@@ -37,6 +39,18 @@ export default new VueRouter({
           name:'Products',
           component:Products,
           meta: { requiresAuth: true },
+        }
+      ]
+    },
+    {
+      path:'/',
+      name:'Dashboard',
+      component:Dashboard,
+      children:[
+        {
+          path:'customer_order',
+          name:'CustomerOrder',
+          component:CustomerOrder,
         }
       ]
     }

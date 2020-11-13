@@ -1,5 +1,6 @@
 <template>
     <div>
+       <loading :active.sync="isLoading"></loading>
         <div class="text-right">
             <button class="btn btn-primary mt-3" @click="openModal(true)">建立新產品</button>
         </div>
@@ -19,10 +20,10 @@
                     <td>{{item.category}}</td>
                     <td>{{item.title}}</td>
                     <td class="text-right">
-                        {{item.origin_price}}
+                        {{item.origin_price | currency}}
                     </td>
                     <td class="text-right">
-                        {{item.price}}
+                        {{item.price | currency}}
                     </td>
                     <td>
                         <span v-if="item.is_enables" class="text-success">啟用</span>
@@ -35,6 +36,27 @@
                 </tr>
             </tbody>
         </table>
+        <!-- 換頁 -->
+        <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item" :class="{'disabled': !pagination.has_pre}">
+            <a class="page-link" href="#" aria-label="Previous"
+            @click.prevent="getProducts(pagination.current_page-1)">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="page-item" v-for="page in pagination.total_pages" :key="page"
+          :class="{'active':pagination.current_page==page}">
+            <a class="page-link" href="#" @click.prevent="getProducts(page)">{{page}}</a></li>
+          <li class="page-item" :class="{'disabled': !pagination.has_next}">
+            <a class="page-link" href="#" aria-label="Next"
+              @click.prevent="getProducts(pagination.current_page-1)">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- modal -->
         <div class="modal fade" id="productModal" tabindex="-1" role="dialog"
   aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -57,10 +79,10 @@
             </div>
             <div class="form-group">
               <label for="customFile">或 上傳圖片
-                <i class="fas fa-spinner fa-spin"></i>
+                <i class="fas fa-spinner fa-spin" v-if="status.fileUploading"></i>
               </label>
               <input type="file" id="customFile" class="form-control"
-                ref="files">
+                ref="files" @change="uploadFile">
             </div>
             <img img="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=828346ed697837ce808cae68d3ddc3cf&auto=format&fit=crop&w=1350&q=80"
               class="img-fluid" :src="tempProduct.iimageUrl" alt="">
@@ -163,19 +185,27 @@ export default {
     data(){
         return{
             products:[],
+            pagination:{},
             tempProduct:{},//新增修改的欄位
             isNew:false,
             delProduct:false,//確認是否刪除
+            isLoading:false,
+            status:{
+              fileUploading:false,
+            }
         }
     },
     methods:{
-        getProducts(){
-            const api=`${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products`;
+        getProducts(page=1){
             const vm=this;
+            const api=`${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products?page=${page}`;
+            vm.isLoading=true;
             console.log(process.env.APIPATH,process.env.CUSTOMPATH);
             this.$http.get(api).then((response) => {
             console.log(response.data);
+            vm.isLoading=false;
             vm.products=response.data.products;
+            vm.pagination=response.data.pagination;
         });
        },
         openModal(isNew, delProduct, item) {
@@ -218,8 +248,8 @@ export default {
         });
        },
        removeProduct(){
-            const api = `${process.env.APIPATH}api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
             const vm=this;
+            const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/product/${vm.tempProduct.id}`;
             // console.log(process.env.APIPATH,process.env.CUSTOMPATH);
             vm.$http.delete(api).then((response) => {
             // console.log(response.data);
@@ -233,10 +263,33 @@ export default {
                 // console.log('刪除失敗')
             }
         });
+       },
+       uploadFile(){
+         console.log(this);
+         const vm=this;
+         const uploadedFile=this.$refs.files.files[0];
+         const formData=new FormData();
+         formData.append('file-to-upload',uploadedFile);
+         const url=`${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`;
+         vm.status.fileUploading=true;
+         this.$http.post(url,formData,{
+           headers:{
+             'Content-type':'multipart/form-data'
+           }
+         }).then((response)=>{
+           console.log(response.data);
+           vm.status.fileUploading=false;
+           if(response.data.success){
+             vm.$set(vm.tempProduct,'imageUrl',response.data.imageUrl)
+           }else{
+             this.$bus.$emit('message:push',response.data.message,'danger')
+           }
+         });
        }
      },
      created(){
          this.getProducts();
+         
      }
 }
 </script>
