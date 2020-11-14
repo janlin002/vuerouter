@@ -11,6 +11,9 @@ vue init webpack 專案名
 ```bash
 npm install
 ```
+```bash
+npm install vue-router --save
+```
 <h2>帶入自己的api</h2>
 
 ```javascript
