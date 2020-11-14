@@ -14,6 +14,11 @@ npm install
 ```bash
 npm install vue-router --save
 ```
+
+```bash
+import Home from '@/components/HelloWorld'
+//自定義元件
+```
 <h2>帶入自己的api</h2>
 
 ```javascript
