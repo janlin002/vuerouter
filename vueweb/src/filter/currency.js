@@ -5,3 +5,5 @@ export default function (num) {
     return currency;
   })}`;
 }
+
+//千分號

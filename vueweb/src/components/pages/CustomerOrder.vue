@@ -21,12 +21,13 @@
     </div>
     <div class="card-footer d-flex">
       <button type="button" class="btn btn-outline-secondary btn-sm"
-      @click="getProduct(item)">
-        <i class="fas fa-spinner fa-spin"></i>
+      @click="getProduct(item.id)">
+        <i class="fas fa-spinner fa-spin" v-if="status.loadingItem===item.id"></i>
         查看更多
       </button>
-      <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
-        <i class="fas fa-spinner fa-spin"></i>
+      <button type="button" class="btn btn-outline-danger btn-sm ml-auto"
+       @click="addtoCart(item.id)">
+        <i class="fas fa-spinner fa-spin" v-if="status.loadingItem===item.id"></i>
         加到購物車
       </button>
     </div>
@@ -56,8 +57,8 @@
                     <div class="h4" v-if="product.price">現在只要 {{ product.price }} 元</div>
                     </div>
                     <select name="" class="form-control mt-3" v-model="product.num">
-                    <option value="1">
-                        選購 
+                    <option :value="num" v-for="num in 10" :key="num">
+                        選購 {{num}} {{product.unit}}
                     </option>
                     </select>
                 </div>
@@ -65,7 +66,8 @@
                     <div class="text-muted text-nowrap mr-3">
                     小計 <strong>{{ product.num * product.price }}</strong> 元
                     </div>
-                    <button type="button" class="btn btn-primary">
+                    <button type="button" class="btn btn-primary" 
+                    @click="addtoCart(product.id,product.num)">
                     <!-- <i class="fas fa-spinner fa-spin" ></i> -->
                     加到購物車
                     </button>
@@ -73,8 +75,52 @@
               </div>
             </div>
           </div>
-    </div>
-</template>
+
+          <table class="table">
+          <thead>
+            <th></th>
+            <th>品名</th>
+            <th>數量</th>
+            <th>單價</th>
+          </thead>
+          <tbody>
+            <tr v-for="item in cart.carts" :key="item">
+              <td class="align-middle">
+                <button type="button" class="btn btn-outline-danger btn-sm">
+                  <i class="far fa-trash-alt"></i>
+                </button>
+              </td>
+              <td class="align-middle">
+                {{ item.product.title }}
+                <!-- <div class="text-success" v-if="item.coupon">
+                  已套用優惠券
+                </div> -->
+              </td>
+              <td class="align-middle">{{ item.qty }}/{{ item.product.unit }}</td>
+              <td class="align-middle text-right">{{ item.final_total }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="text-right">總計</td>
+              <td class="text-right">{{ cart.total }}</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-right text-success">折扣價</td>
+              <td class="text-right text-success">{{ cart.final_total }}</td>
+            </tr>
+          </tfoot>
+        </table>
+        <div class="input-group mb-3 input-group-sm">
+          <input type="text" class="form-control" placeholder="請輸入優惠碼">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">
+              套用優惠碼
+            </button>
+          </div>
+        </div>
+            </div>
+        </template>
 
 <script>
 import $ from 'jquery'
@@ -84,6 +130,9 @@ export default {
         return{
             products:[],
             isLoading:false,
+            status:{
+              loadingItem:'',
+            },
             product:{}
         };
     },
@@ -100,16 +149,50 @@ export default {
        getProduct(id){
           const url=`${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/product/${id}`;
             const vm=this;
-            vm.isLoading=true;
+            vm.status.loadingItem=id;
             this.$http.get(url).then((response) => {
             vm.product=response.data.product;
             $('#productModal').modal('show');
-            vm.isLoading=false;    
+            vm.status.loadingItem='';    
            });
+       },
+       addtoCart(id,qty=1){
+          const url=`${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+            const vm=this;
+            vm.status.loadingItem=id;
+            const cart={
+              product_id:id,
+              qty
+            }
+            this.$http.post(url,{data:cart}).then((response) => {
+              console.log(response.data)
+            vm.status.loadingItem='';   
+            vm.getCart();
+            $('#productModal').modal('hide') ;
+           });
+       },
+       getCart(){
+         const url=`${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+            const vm=this;
+            vm.isLoading=true;
+            this.$http.get(url).then((response) => {
+            vm.products=response.data.products;
+            vm.isLoading=false;      
+        });
+       },
+       removeCartItem(id){
+         const url=`${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart/${id}`;
+            const vm=this;
+            vm.isLoading=true;
+            this.$http.delete(url).then((response) => {
+            vm.products=response.data.products;
+            vm.isLoading=false;      
+        });
        }
     },
     created(){
         this.getProducts();
+        this.getCart();
     }
 }
 </script>
