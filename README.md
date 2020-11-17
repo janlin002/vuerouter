@@ -44,7 +44,16 @@ import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 ```
+<h2>在同一個路徑載入兩個頁面文件</h2>
+1.App.vue新增：
 
+```html
+<router-view name="menu"></router-view>
+```
+
+2.新增一個menu.vue(同page.vue)，載入navs的內容<br>
+3.把page.vue中的bottom刪除<br>
+4.在index.js中匯入menu.vue，且更改page.vue的路由配置<br>
 <h2>帶入自己的api</h2>
 
 ```javascript
