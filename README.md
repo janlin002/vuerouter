@@ -32,6 +32,19 @@ vue component/pages 分頁內容<br>
 import Home from '@/components/HelloWorld'
 //自定義元件
 ```
+<h2>載入axios</h2>
+
+```bash
+npm install --save axios vue-axios
+```
+
+```bash
+載入axios
+import Vue from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+```
+
 <h2>帶入自己的api</h2>
 
 ```javascript
