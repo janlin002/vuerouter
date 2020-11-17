@@ -11,9 +11,22 @@ vue init webpack 專案名
 ```bash
 npm install
 ```
+<h2>Router配置</h1>
+
 ```bash
 npm install vue-router --save
 ```
+
+```bash
+啟用vue-router
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+
+Vue.use(VueRouter)
+```
+main.js 進入點<br>
+src/router/index.js 路由配置檔案<br>
+vue component/pages 分頁內容<br>
 
 ```bash
 import Home from '@/components/HelloWorld'
