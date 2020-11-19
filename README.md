@@ -96,4 +96,24 @@ index.js ->
 }
 
 ```
+<h2>登入的跨域存取問題</h2>
+
+```bash
+login.vue:
+if(response.data.success){
+  const token = response.data.token;
+  const expired = response.data.expired;
+  console.log(token, expired);
+  document.cookie = `hexToken=${token};expires=${new Date(expired)};`;
+    vm.$router.push('/backboard/products') //登入成功效果
+   }
+        
+  
+ dashboard.vue加入created:
+  created(){
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1');
+        this.$http.defaults.headers.common.Authorization = `${token}`;
+    }
+```
+[cookie相關文章](https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie)
 
