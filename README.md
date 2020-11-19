@@ -76,4 +76,24 @@ npm install node-sass sass-loader --save
 sigin ->admin/sigin
 + axios.defaults.withCredentials = true;
 ```
+<h2>全局守衛（避免顧客誤啟後臺網頁）</h2>
+
+```bash
+main.js加入：
+router.beforeEach((to, from, next) => {
+  next()//防止全局守衛阻擋
+})
+在指定的路由加入：
+ meta: { requiresAuth: true }
+```
+<h2>避免顧客誤啟開發者未設立的路由</h2>
+
+```bash
+index.js ->
+{
+    path:'*',
+    redirect:'login' //需返回的頁面
+}
+
+```
 
