@@ -70,4 +70,10 @@ npm install bootstrap --save
 npm install node-sass sass-loader --save
 ```
 <p>須在style標籤中加入 lang=scss </p><br>
+<h2>使用cookie記錄登入資訊</h2>
+
+```bash
+sigin ->admin/sigin
++ axios.defaults.withCredentials = true;
+```
 
