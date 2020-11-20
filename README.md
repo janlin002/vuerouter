@@ -117,3 +117,8 @@ if(response.data.success){
 ```
 [cookie相關文章](https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie)
 
+<h2>安裝jquery,popper</h2>
+
+```bash
+npm install --save jquery popper.js
+```
