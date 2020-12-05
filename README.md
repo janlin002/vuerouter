@@ -133,5 +133,5 @@ methods → action (處理非同步＆取得遠端資料)
 
 computed → getter (資料在放上畫面之前的過濾)
 
-         → mutation (改變資料內容)
+         → mutation (處理同步&改變資料內容)
 ```
