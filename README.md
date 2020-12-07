@@ -69,6 +69,10 @@ npm install bootstrap --save
 ```
 ```bash
 npm install node-sass sass-loader --save
+
+目前版本有些問題，建議先下載下列版本
+npm install node-sass@4.14.1
+npm install --save-d sass-loader@7.1.0
 ```
 <p>須在style標籤中加入 lang=scss </p><br>
 <h2>使用cookie記錄登入資訊</h2>
