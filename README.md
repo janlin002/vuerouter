@@ -44,6 +44,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 ```
+[下載連結](https://www.npmjs.com/package/vue-axios)
 <h2>在同一個路徑載入兩個頁面文件</h2>
 1.App.vue新增：
 
