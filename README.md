@@ -91,6 +91,7 @@ router.beforeEach((to, from, next) => {
 在指定的路由加入：
  meta: { requiresAuth: true }
 ```
+[參考網頁](https://router.vuejs.org/zh/guide/advanced/navigation-guards.html)
 <h2>避免顧客誤啟開發者未設立的路由</h2>
 
 ```bash
