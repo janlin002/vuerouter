@@ -128,7 +128,18 @@ if(response.data.success){
 ```bash
 npm install --save jquery popper.js
 ```
+<h2>isLoading 版本有問題 需新增一個postcss.config.js的資料夾</h2>
 
+```bash
+module.exports = {
+    "plugins": {
+      "postcss-import": {},
+      "postcss-url": {},
+      // to edit target browsers: use "browserslist" field in package.json
+      "autoprefixer": {}
+    }
+  }
+```
 
 # Vuex
 
